@@ -20,13 +20,19 @@ const MID = { x: -221.09, y: -79, scale: 805.088 / 362 };     // 6.3: 805.09×55
 const DONE = { x: 0, y: 0, scale: 1 };                        // 6.4: 362×250 en (20, 238)
 
 /* Arranque nítido: con el sobre a 3,75× ni el PNG a 8x llega a la resolución
-   de la pantalla. Durante el arranque, encima del sobre va el PNG del sobre
-   grande de 6.2 (Group 112, ya a resolución de pantalla completa), colocado
-   dentro de .env en el mismo sitio, y se funde en cuanto empieza a encogerse.
-   Group 112 mide 1265.55×874 y equivale al cuerpo del sobre (362×250); el PNG
-   es el trozo visible en el frame: desde x = 431.32 del grupo, 402×874. */
-const BIG_TO_ENV = 362 / 1265.552;
-const FULL_IMG = { left: 431.32 * BIG_TO_ENV, top: 0, width: 402 * BIG_TO_ENV, height: 874 * BIG_TO_ENV };
+   de la pantalla. Durante el arranque, encima va envelope-closed-full@4x.png:
+   el MISMO sobre de 6.4 (mismo SVG, mismas sombras) ya ampliado al estado FULL
+   y dibujado a resolución de pantalla completa (fuentes-figma/envelope-full.html).
+   Va dentro de .env, cubriendo justo la pantalla (402×874 en coordenadas de la
+   pantalla → ÷ escala en coordenadas del sobre), y se funde al empezar a
+   encogerse. Como es el mismo dibujo, el fundido no se nota. */
+const ENV_ORIGIN = { left: 20, top: 238 }; // .env en la pantalla (css/envelope.css)
+const FULL_IMG = {
+  left: -(ENV_ORIGIN.left + FULL.x) / FULL.scale,
+  top: -(ENV_ORIGIN.top + FULL.y) / FULL.scale,
+  width: 402 / FULL.scale,
+  height: 874 / FULL.scale,
+};
 const FULL_FADE = 0.35; // s que tarda en fundirse (PARA REVISAR)
 
 const SHRINK_START = 0.3;
@@ -51,7 +57,7 @@ export function playSealAnimation(screen) {
   // Estado inicial = 6.2
   gsap.set(env, { ...FULL, transformOrigin: '0 0', force3D: false });
   const full = document.createElement('img');
-  full.src = 'assets/img/envelope-closed-big@4x.png';
+  full.src = 'assets/img/envelope-closed-full@4x.png';
   full.alt = '';
   full.style.cssText = `left:${FULL_IMG.left}px;top:${FULL_IMG.top}px;width:${FULL_IMG.width}px;height:${FULL_IMG.height}px`;
   env.insertBefore(full, seal);

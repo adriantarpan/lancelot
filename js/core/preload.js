@@ -29,6 +29,7 @@ const IMAGES = [
   'coach/line-game.svg',
   'coach/line-name.svg',
   'envelope-closed-big@4x.png',
+  'envelope-closed-full@4x.png',
   'envelope-closed-mid@4x.png',
   'envelope-closed@8x.png',
   'game-ground-line.svg',
