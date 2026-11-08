@@ -1,0 +1,67 @@
+/* ==========================================================================
+   TECLADO SIMULADO — imita el teclado de iOS en modo claro.
+   A propósito NO usa los tokens de Lancelot: tiene que leerse como sistema.
+   ========================================================================== */
+
+.kb {
+  --kb-bg: #d1d3d9;          /* fondo del teclado claro de iOS */
+  --kb-key: #ffffff;         /* teclas de letra */
+  --kb-fn: #abb0ba;          /* teclas de función (mayús, borrar, 123, intro) */
+  --kb-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+  --kb-blue: #007aff;
+
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 402px;
+  z-index: 40;
+  background: var(--kb-bg);
+  font-family: -apple-system, "SF Pro Text", "SF Pro Display", system-ui, "Helvetica Neue", sans-serif;
+  color: #000;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  visibility: hidden;          /* GSAP lo esconde por debajo con yPercent: 100 */
+}
+.kb.is-open { visibility: visible; }
+
+.kb__rows { position: relative; padding: 8px 3px 0; }
+.kb__row { position: relative; height: 42px; margin-bottom: 11px; }
+.kb__row:last-child { margin-bottom: 0; }
+
+.kb__key {
+  position: absolute;
+  top: 0;
+  height: 42px;
+  border-radius: 5px;
+  background: var(--kb-key);
+  box-shadow: var(--kb-shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22.5px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.kb__key--fn    { background: var(--kb-fn); font-size: 16px; }
+.kb__key--space { font-size: 16px; }
+.kb__key--wide  { font-size: 16px; }
+.kb__key.is-down:not(.kb__key--letter) { background: #f2f3f5; }
+.kb__key--fn.is-down { background: #fff; }
+.kb__key--return.is-primary { background: var(--kb-blue); color: #fff; }
+.kb__key svg { display: block; }
+
+/* Mayúsculas: icono relleno cuando está activa; con barra = bloqueo */
+.kb__key[data-k="shift"].is-on { background: #fff; }
+
+/* Franja gris inferior (vacía; mantiene la altura del teclado de iOS) */
+.kb__strip { position: relative; height: 58px; }
+
+/* Globo ampliado al pulsar una letra */
+.kb__pop { position: absolute; left: 0; top: 0; pointer-events: none; display: none; z-index: 2; }
+.kb__pop.is-on { display: block; }
+.kb__pop-bubble, .kb__pop-stem { position: absolute; background: #fff; }
+.kb__pop-bubble { border-radius: 9px; box-shadow: 0 0 0 0.5px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.25); display: flex; align-items: center; justify-content: center; font-size: 34px; }
+.kb__pop-stem { border-radius: 0 0 5px 5px; }

@@ -1,0 +1,105 @@
+/* ==========================================================================
+   BASE — marco de teléfono, lienzo, tipografía y botones compartidos
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; height: 100dvh; overscroll-behavior: none; }
+body {
+  background: #e9ded4;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  font-family: var(--f-text);
+  color: var(--c-dark);
+}
+
+button, input, textarea { font: inherit; color: inherit; background: none; border: 0; outline: 0; text-transform: inherit; letter-spacing: inherit; }
+button { cursor: pointer; }
+img { display: block; max-width: none; }
+
+/* --- Marco de teléfono (escritorio). fit.js aplica la escala a #device. --- */
+.device {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--stage-w) + 24px);
+  height: calc(var(--stage-h) + 24px);
+  padding: 12px;
+  border-radius: 64px;
+  background: #160409;
+  box-shadow: 0 30px 80px rgba(36, 7, 15, 0.35), inset 0 0 0 2px #3a1a22;
+  transform-origin: 50% 50%;
+}
+.stage {
+  position: relative;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  border-radius: 52px;
+  overflow: hidden;
+  background: var(--c-cream);
+  isolation: isolate;
+}
+/* En un móvil real (o instalada como app): sin marco, a pantalla completa.
+   El fondo de la página lo pone fit.js con el color de la pantalla activa. */
+.is-mobile body { background: var(--c-cream); position: fixed; inset: 0; touch-action: manipulation; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.is-mobile input, .is-mobile textarea { -webkit-user-select: text; user-select: text; }
+.is-mobile .device { padding: 0; border-radius: 0; background: none; box-shadow: none; width: var(--stage-w); height: var(--stage-h); }
+.is-mobile .stage { border-radius: 0; }
+
+.app { position: absolute; inset: 0; }
+
+/* Zona oculta de reset (esquina superior izquierda) */
+.reset-hotspot { position: absolute; left: 0; top: 0; width: 44px; height: 44px; z-index: 50; opacity: 0; }
+
+/* --- Pantalla: lienzo 402×874; sus hijos directos se posicionan en absoluto
+       con las coordenadas exactas de Figma (left/top en el atributo style). --- */
+.screen { position: absolute; inset: 0; overflow: hidden; background: var(--c-cream); }
+.screen > * { position: absolute; }
+.screen[data-bg="dark"]  { background: var(--c-dark); }
+.screen[data-bg="blue"]  { background: var(--c-blue); }
+
+/* --- Tipografía --- */
+.f-display { font-family: var(--f-display); font-weight: 400; line-height: 0.9; letter-spacing: -0.06em; white-space: nowrap; }
+.f-text    { font-family: var(--f-text); font-weight: 400; line-height: 1.1; text-transform: uppercase; white-space: nowrap; }
+.wrap      { white-space: normal; }
+.bold      { font-weight: 700; }
+.underline { text-decoration: underline; text-decoration-thickness: 8%; }
+.center    { text-align: center; }
+.right     { text-align: right; }
+/* Centrado horizontal: `left` = eje central del elemento */
+.cx        { transform: translateX(-50%); }
+
+.s12 { font-size: 12px; } .s15 { font-size: 15px; } .s20 { font-size: 20px; }
+.s25 { font-size: 25px; } .s30 { font-size: 30px; } .s35 { font-size: 35px; }
+.s45 { font-size: 45px; } .s58 { font-size: 58px; } .s100 { font-size: 100px; }
+
+.c-dark { color: var(--c-dark); } .c-pink { color: var(--c-pink); }
+.c-cream { color: var(--c-cream); } .c-blue { color: var(--c-blue); }
+.c-dark-50 { color: var(--c-dark-50); } .c-dark-20 { color: var(--c-dark-20); }
+
+/* --- Botones (50px de alto, radio 10) --- */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  border-radius: var(--r-btn);
+  font-family: var(--f-text);
+  font-size: 25px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.btn--dark    { background: var(--c-dark); color: var(--c-pink); }
+.btn--outline { border: 2px solid var(--c-dark); color: var(--c-dark); }
+.btn--muted   { background: var(--c-dark-10); color: var(--c-dark); }   /* estado gris / deshabilitado */
+.btn--cream   { background: var(--c-cream); color: var(--c-blue); }
+.btn[disabled] { cursor: default; }
+
+/* Botón redondo de volver (asset de Figma 50×50) */
+.back { width: 50px; height: 50px; left: 20px; top: 71px; }
+.back img { width: 50px; height: 50px; }
+
+/* Enlaces de texto subrayados */
+.link { font-family: var(--f-text); font-size: 20px; line-height: 1.1; text-transform: uppercase; text-decoration: underline; text-decoration-thickness: 8%; white-space: nowrap; }

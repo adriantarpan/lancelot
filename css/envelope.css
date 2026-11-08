@@ -1,0 +1,15 @@
+/* ==========================================================================
+   SOBRE (6.4 y animación de sellado) — piezas de Figma
+   Posición final: cuerpo de 362×250 en (20, 238). La animación mueve y
+   escala todo el bloque .env desde su esquina superior izquierda.
+   ========================================================================== */
+
+.env { left: 20px; top: 238px; width: 362px; height: 250px; transform-origin: 0 0; }
+.env > * { position: absolute; }
+
+/* Group 111 (cerrado): el SVG exportado empieza 4px a la izquierda del cuerpo */
+.env__closed { left: -3.98px; top: 0; width: 370px; height: 252px; }
+
+/* Group 110 (sello): (149, 334) en pantalla → (129, 96) en el sobre */
+.env__seal { left: 129px; top: 96px; width: 102px; height: 101px; transform-origin: 50% 50%; }
+.env__seal img { position: absolute; left: -9px; top: 0; width: 111px; height: 109.957px; }

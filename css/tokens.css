@@ -1,0 +1,55 @@
+/* ==========================================================================
+   TOKENS — sacados de Figma (archivo ADRIAN-TARPAN, página WIREFRAMES)
+   ========================================================================== */
+
+@font-face {
+  font-family: "Cheltenham Condensed";
+  src: url("../assets/fonts/CheltenhamCondensed-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: "Bricolage Condensed";
+  src: url("../assets/fonts/BricolageGrotesque_24pt_Condensed-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: "Bricolage Condensed";
+  src: url("../assets/fonts/BricolageGrotesque_24pt_Condensed-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: block;
+}
+
+/* Solo se usa en el enlace "Volver a tu capítulo" (frame 2.1) */
+@font-face {
+  font-family: "Bricolage SemiCondensed";
+  src: url("../assets/fonts/BricolageGrotesque_SemiCondensed-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: block;
+}
+
+:root {
+  /* Colores */
+  --c-dark: #24070f;          /* vino casi negro */
+  --c-pink: #ff81e6;          /* rosa Lancelot */
+  --c-cream: #fdf3ea;         /* crema de fondo */
+  --c-blue: #0153c6;          /* azul lacre */
+  --c-dark-50: rgba(36, 7, 15, 0.5);
+  --c-dark-20: rgba(36, 7, 15, 0.2);
+  --c-dark-10: rgba(36, 7, 15, 0.1);
+  --c-pink-30: rgba(255, 129, 230, 0.3);
+  --c-pink-15: rgba(255, 129, 230, 0.15);
+
+  /* Fuentes */
+  --f-display: "Cheltenham Condensed", Georgia, serif;   /* titulares, interlineado 0.9 */
+  --f-text: "Bricolage Condensed", "Arial Narrow", sans-serif; /* todo lo demás, en mayúsculas */
+
+  /* Lienzo: tamaño de los frames de Figma */
+  --stage-w: 402px;
+  --stage-h: 874px;
+
+  /* Radios */
+  --r-btn: 10px;
+  --r-pill: 25px;
+}
