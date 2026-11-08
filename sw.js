@@ -5,7 +5,7 @@
    los cambios se ven sin tener que reinstalar nada.
    ========================================================================== */
 
-const CACHE = 'lancelot-v10';
+const CACHE = 'lancelot-v11';
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));

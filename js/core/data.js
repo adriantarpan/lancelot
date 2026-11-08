@@ -40,8 +40,8 @@ export const BOOK = {
   // Etiqueta de fase que se ve en la Home
   phases: [
     { from: 1,  to: 10, label: 'fase I · los comienzos' },
-    { from: 11, to: 20, label: 'fase II' },  // PENDIENTE: nombre de la fase II
-    { from: 21, to: 30, label: 'fase III' }, // PENDIENTE: nombre de la fase III
+    { from: 11, to: 20, label: 'fase II · la travesía' },
+    { from: 21, to: 30, label: 'fase III · la conquista' },
   ],
 };
 
