@@ -126,9 +126,9 @@ export const ProphecyEnvelopeFull = {
     <section class="screen" data-screen="6.2">
       ${head()}
       ${sealedTexts(revealOfLast())}
-      <div style="left:-431.32px;top:0;width:1265.552px;height:874px">
-        <img src="${IMG('envelope-closed-big.svg')}" alt="" style="position:absolute;left:-8.99px;top:0;width:1278.55px;height:883px">
-      </div>
+      <!-- Group 112 exportado de Figma en PNG a 4x, ya recortado al frame (402×874).
+           PNG y no SVG: el SVG lleva filtros de sombra que Safari pinta pixelados. -->
+      <img src="${IMG('envelope-closed-big@4x.png')}" alt="" style="left:0;top:0;width:402px;height:874px">
     </section>`,
 };
 
@@ -139,9 +139,8 @@ export const ProphecyEnvelopeOpen = {
     <section class="screen" data-screen="6.3">
       ${head()}
       ${sealedTexts(revealOfLast())}
-      <div style="left:-201.088px;top:159px;width:805.088px;height:556px">
-        <img src="${IMG('envelope-closed-big.svg')}" alt="" style="position:absolute;left:-5.72px;top:0;width:813.4px;height:561.8px">
-      </div>
+      <!-- Group 112 en PNG a 4x, recortado al ancho del frame: 402×565 (con la sombra) -->
+      <img src="${IMG('envelope-closed-mid@4x.png')}" alt="" style="left:0;top:159px;width:402px;height:565px">
     </section>`,
 };
 

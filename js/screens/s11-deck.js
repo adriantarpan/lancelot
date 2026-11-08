@@ -36,6 +36,10 @@ const PILE = [
   { x: 198.91, y: 493.79, r: 1.37 },
 ];
 
+/* Parpadeo de "Desliza hacia arriba…" (PARA REVISAR: igual que en el minijuego y el sello) */
+const BLINK_MIN_OPACITY = 0.25; // opacidad más tenue
+const BLINK_HALF_CYCLE = 0.9;   // s de encendido a apagado
+
 let filter = 'todas';
 let returning = false; // 11.2 → 11.1 con la animación de robar carta al revés
 
@@ -121,7 +125,7 @@ export const DeckCard = {
         </div>
       </div>
 
-      <p class="f-text s20 c-cream center cx hint" style="left:201px;top:767px">Desliza hacia arriba para pasar carta</p>
+      <p class="f-text s20 c-cream center cx hint" style="left:201px;top:767px"><span class="deck-blink">Desliza hacia arriba para pasar carta</span></p>
       <p class="f-text s15 c-cream center cx hint" style="left:201px;top:803px">toca la carta para ver su reverso</p>
     </section>`;
   },
@@ -131,6 +135,12 @@ export const DeckCard = {
     let index = Math.min(Number(params.i) || 0, Math.max(cards.length - 1, 0));
 
     if (params.enter) enterCardScreen(el);
+
+    // "Desliza hacia arriba para pasar carta" parpadea despacio (indica acción).
+    // Va en un <span> propio: la entrada y la salida de la pantalla animan el <p>.
+    const blink = window.gsap && gsap.to(el.querySelector('.deck-blink'), {
+      opacity: BLINK_MIN_OPACITY, duration: BLINK_HALF_CYCLE, ease: 'sine.inOut', repeat: -1, yoyo: true,
+    });
 
     // Volver a 11.1: la carta se gira y en 11.1 vuelve al mazo (robar carta al revés)
     const backBtn = el.querySelector('.back');
@@ -154,6 +164,6 @@ export const DeckCard = {
         history.replaceState(null, '', `#/11.2?f=${encodeURIComponent(f)}&i=${index}`);
       },
     });
-    return () => { kill(); backBtn.removeEventListener('click', onBack, true); };
+    return () => { kill(); blink?.kill(); backBtn.removeEventListener('click', onBack, true); };
   },
 };
