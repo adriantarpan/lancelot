@@ -67,7 +67,7 @@ function bindContinue(el) {
   el.querySelector('[data-continue]').addEventListener('click', continueReading);
 }
 
-const sealImg = () => `<img src="${IMG('seal-wax-large@4x.png')}" alt="" style="position:absolute;left:-9px;top:0;width:149px;height:147.569px">`;
+const sealImg = () => `<img src="${IMG('seal-wax-large@8x.png')}" alt="" style="position:absolute;left:-9px;top:0;width:149px;height:147.569px">`;
 
 /** Rompe el sello: tiembla, se parte en dos por el zigzag y las mitades caen. */
 function breakSeal(screen, done) {

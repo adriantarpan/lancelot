@@ -83,13 +83,15 @@ export function playSealAnimation(screen) {
     // pequeño asentamiento al llegar
     .fromTo(env, { rotation: -1.2 }, { rotation: 0, duration: 0.5, ease: 'back.out(3)', transformOrigin: '50% 50%' }, SHRINK_START + SHRINK_DURATION - 0.2);
 
-  // El sello se posa encima: cae, impacta y rebota un poco
+  // El sello se posa encima: cae, impacta y rebota un poco.
+  // Sin filtro CSS de sombra: Safari dibuja los elementos con filtro a menos
+  // resolución y el sello se veía borroso al caer. La sombra ya viene en el
+  // PNG del sello (la de Figma).
   tl.fromTo(seal,
-    { opacity: 0, scale: 1.9, y: -46, filter: 'drop-shadow(0 26px 18px rgba(36,7,15,0.25))' },
-    { opacity: 1, scale: 1, y: 0, filter: 'drop-shadow(0 3px 3px rgba(36,7,15,0.25))', duration: 0.38, ease: 'power3.in' }, SEAL_AT)
+    { opacity: 0, scale: 1.9, y: -46 },
+    { opacity: 1, scale: 1, y: 0, duration: 0.38, ease: 'power3.in' }, SEAL_AT)
     .to(seal, { keyframes: [{ scale: 1.07, duration: 0.09, ease: 'power1.out' }, { scale: 1, duration: 0.35, ease: 'back.out(3)' }] })
-    .to(env, { keyframes: [{ scaleY: 0.975, duration: 0.08, ease: 'power1.out' }, { scaleY: 1, duration: 0.4, ease: 'back.out(3)' }], transformOrigin: '50% 100%' }, '<-0.44')
-    .set(seal, { clearProps: 'filter' });
+    .to(env, { keyframes: [{ scaleY: 0.975, duration: 0.08, ease: 'power1.out' }, { scaleY: 1, duration: 0.4, ease: 'back.out(3)' }], transformOrigin: '50% 100%' }, '<-0.44');
 
   // Textos y botón
   tl.to(texts, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.09 }, TEXTS_AT);
