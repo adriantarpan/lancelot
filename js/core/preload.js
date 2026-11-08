@@ -45,6 +45,7 @@ const IMAGES = [
   'horse-btn.svg',
   'horse-welcome.svg',
   'icon-bookmark.svg',
+  'icon-check-cream.svg',
   'icon-close.svg',
   'icon-send.svg',
   'logo-festina-lente.svg',

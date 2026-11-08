@@ -24,6 +24,7 @@ export const CLUB = {
     time: '19:30',
     place: 'casa de mar',
     untilChapter: 13,
+    shortDate: '12 nov',               // para "en tu calendario · 12 nov 19:30" (10.1)
     othersArrived: 4,                  // de los otros 6 miembros, cuántos han llegado al cap. 13
   },
 };
@@ -179,6 +180,7 @@ export function initialState() {
     comments: structuredClone(COMMENTS),
     prophecies: structuredClone(PROPHECIES),
     shields: { month: '2026-11', perMonth: 2, used: 0, raised: false },
+    calendarAdded: false,                       // reunión añadida al calendario (10 → 10.1)
     game: { record: 0 },                        // récord del minijuego: empieza en 0
     seenAchievements: [],                       // p.ej. ['fase-2']
   };

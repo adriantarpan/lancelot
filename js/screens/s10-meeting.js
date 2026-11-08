@@ -3,6 +3,7 @@
    · Fecha, hora, sitio y capítulo acordado.
    · Tarjeta de escudo (2 al mes): "Alzar" ↔ "Bajar" (estados de Figma).
    · Progreso anónimo del club: "X de 7 han llegado".
+   · "Añadir al calendario" (10) ↔ "En tu calendario" + "quitar" (10.1), animado.
    · "Jugar con el mazo del club" → 11.1.
    ========================================================================== */
 
@@ -72,6 +73,88 @@ function animateShield(screen, raise, done) {
   tl.fromTo([oldCard, newCard], { scale: 1 }, { keyframes: [{ scale: 0.98, duration: 0.1, ease: 'power1.out' }, { scale: 1, duration: 0.35, ease: 'back.out(3)' }] }, 0);
 }
 
+/* ---------- Añadir al calendario (10 → 10.1) ----------
+   10:   botón con borde "añadir al calendario".
+   10.1: botón azul "en tu calendario · 12 nov 19:30" con un check, y debajo
+         "te avisaremos el día antes" + "quitar" (subrayado), que vuelve a 10.
+   Coordenadas de Figma relativas al bloque, que empieza en (20, 515). */
+const CHECK_SVG = `<svg width="22" height="16.441" viewBox="0 0 22 16.441" fill="none" style="position:absolute;left:321px;top:17px;overflow:visible"><path class="cal-check" d="M1 8.25L7.50603 15L21 1" stroke-width="2" stroke-linecap="round" stroke="#FDF3EA"/></svg>`;
+
+function calendarBlock() {
+  const m = CLUB.meeting;
+  if (state.calendarAdded) {
+    return `
+    <div class="cal is-added" style="left:20px;top:515px;width:362px;height:82px">
+      <div class="cal__on" style="position:absolute;left:0;top:0;width:362px;height:50px;border-radius:var(--r-btn);background:var(--c-blue)">
+        <p class="f-text s25 c-cream cal__label" style="position:absolute;left:20px;top:11px">en tu calendario · ${m.shortDate} ${m.time}</p>
+        ${CHECK_SVG}
+      </div>
+      <p class="f-text s20 c-dark-50 cal__hint" style="position:absolute;left:52px;top:60px">te avisaremos el día antes</p>
+      <button class="f-text s20 c-dark-50 cal__hint" data-cal="remove" style="position:absolute;left:261px;top:60px;text-decoration:underline;text-underline-offset:2px">quitar</button>
+    </div>`;
+  }
+  return `
+    <div class="cal" style="left:20px;top:515px;width:362px;height:50px">
+      <button class="btn btn--outline" data-cal="add" style="left:0;top:0;width:362px;justify-content:flex-start;padding-left:${139.5 - 20 - 2}px"><span class="cx" style="display:block">añadir al calendario</span></button>
+    </div>`;
+}
+
+/* Misma mecánica que el escudo: al añadir, el azul se expande en círculo desde
+   donde has tocado hasta cubrir el botón, entra el texto, el check se dibuja y
+   aparece la línea de abajo. Al quitar, lo mismo al revés: se van la línea y el
+   texto y el azul se recoge hacia el centro dejando ver el botón con borde.
+   PARA REVISAR: duraciones y curvas en estas constantes. */
+const CAL_RADIUS = 380;   // cubre el botón (362×50) desde cualquier punto
+const CAL_FILL = 0.55;    // s, expansión / recogida del azul
+const CAL_CONTENT = 0.3;  // s, entrada / salida del texto y la línea de abajo
+const CAL_CHECK = 0.35;   // s, dibujo del check
+const CHECK_LEN = 30;     // largo del trazo del check (algo más que el real)
+
+function animateCalendar(screen, add, event, done) {
+  const oldBlock = screen.querySelector('.cal');
+  const tmp = document.createElement('div');
+  tmp.innerHTML = calendarBlock().trim();
+  const newBlock = tmp.firstElementChild;
+  const addedBlock = add ? newBlock : oldBlock;
+  const blue = addedBlock.querySelector('.cal__on');
+  const label = addedBlock.querySelector('.cal__label');
+  const check = addedBlock.querySelector('.cal-check');
+  const hints = addedBlock.querySelectorAll('.cal__hint');
+
+  // origen del círculo: el punto tocado (coordenadas del botón) o el centro
+  let origin = '181px 25px';
+  if (add && event?.clientX) {
+    const r = oldBlock.getBoundingClientRect();
+    const k = r.width / 362; // escala del lienzo
+    origin = `${(event.clientX - r.left) / k}px ${(event.clientY - r.top) / k}px`;
+  }
+  const circle = (rad) => `circle(${rad}px at ${origin})`;
+  const tl = gsap.timeline({
+    onComplete: () => {
+      oldBlock.remove();
+      gsap.set([blue, label, ...hints], { clearProps: 'clipPath,opacity,transform' });
+      gsap.set(check, { attr: { 'stroke-dasharray': null, 'stroke-dashoffset': null } });
+      done();
+    },
+  });
+
+  if (add) {
+    oldBlock.after(newBlock); // encima del botón con borde
+    gsap.set(check, { attr: { 'stroke-dasharray': `${CHECK_LEN} ${CHECK_LEN}`, 'stroke-dashoffset': CHECK_LEN } });
+    tl.fromTo(blue, { clipPath: circle(0) }, { clipPath: circle(CAL_RADIUS), duration: CAL_FILL, ease: 'power3.inOut' })
+      .from(label, { opacity: 0, y: 6, duration: CAL_CONTENT, ease: 'power2.out' }, CAL_FILL * 0.55)
+      .to(check, { attr: { 'stroke-dashoffset': 0 }, duration: CAL_CHECK, ease: 'power2.out' }, CAL_FILL * 0.7)
+      .from(hints, { opacity: 0, y: -6, duration: CAL_CONTENT, stagger: 0.05, ease: 'power2.out' }, CAL_FILL * 0.75);
+    // pequeño "toque" del botón al pulsar
+    tl.fromTo([oldBlock, blue], { scale: 1 }, { keyframes: [{ scale: 0.98, duration: 0.1, ease: 'power1.out' }, { scale: 1, duration: 0.35, ease: 'back.out(3)' }] }, 0);
+  } else {
+    oldBlock.before(newBlock); // el botón con borde, debajo del azul
+    tl.to([...hints].reverse(), { opacity: 0, y: -6, duration: CAL_CONTENT * 0.7, stagger: 0.03, ease: 'power2.in' })
+      .to([label, check.parentNode], { opacity: 0, y: 6, duration: CAL_CONTENT * 0.7, ease: 'power2.in' }, 0)
+      .fromTo(blue, { clipPath: circle(CAL_RADIUS) }, { clipPath: circle(0), duration: CAL_FILL, ease: 'power3.inOut' }, CAL_CONTENT * 0.4);
+  }
+}
+
 export default {
   id: '10',
   render() {
@@ -95,7 +178,7 @@ export default {
       <span style="left:40px;top:443px;width:${Math.round((322 * arrived) / TOTAL)}px;height:15px;border-radius:5px 0 0 5px;background:var(--c-pink)"></span>
       <p class="f-text s20 c-dark" style="left:41px;top:463px">${arrived} de ${TOTAL} han llegado</p>
 
-      <button class="btn btn--outline" id="calendar" style="left:20px;top:515px;width:362px;justify-content:flex-start;padding-left:${139.5 - 20 - 2}px"><span class="cx" style="display:block">añadir al calendario</span></button>
+      ${calendarBlock()}
 
       <button class="btn btn--outline" data-nav="11.1" style="left:20px;top:694px;width:362px;border-color:#000">jugar con el mazo del club</button>
 
@@ -114,6 +197,17 @@ export default {
       busy = true;
       animateShield(el, raise, () => { busy = false; });
     });
-    // PENDIENTE: "añadir al calendario" no tiene comportamiento definido en Figma.
+
+    // Añadir al calendario (10 → 10.1) y "quitar" (10.1 → 10)
+    let calBusy = false;
+    el.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-cal]');
+      if (!btn || calBusy) return;
+      const add = btn.dataset.cal === 'add';
+      update((s) => { s.calendarAdded = add; });
+      if (!window.gsap) return refresh();
+      calBusy = true;
+      animateCalendar(el, add, e, () => { calBusy = false; });
+    });
   },
 };
